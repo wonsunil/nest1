@@ -14,6 +14,12 @@ export class UserService{
         return this.userRepository.findOne({ id });
     };
 
+    async login(id: String, password: String): Promise<User> {
+        const users = await this.userRepository.find();
+        
+        return users.find(user => user.id === id && user.password === password);
+    };
+
     findAll(): Promise<User[]> {
         return this.userRepository.find();
     };
