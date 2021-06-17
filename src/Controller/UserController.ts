@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Param, Render, Req } from "@nestjs/common";
-import { Request } from "express";
+import { Controller, Get, Post, Body, Param, Render, Req, Res, Session } from "@nestjs/common";
+import { Request, Response } from "express";
 import { UserService } from '../Service/UserService';
 import { User } from "../Model/User";
 
@@ -31,8 +31,17 @@ export class UserController{
     };
 
     @Post("/login")
-    async login(@Req() req: Request) {
-        console.log(await this.userService.login(req.body.id, req.body.password));
+    async login(@Req() req: Request, @Res() res: Response, @Session() session) {
+        const user: User = await this.userService.login(req.body.id, req.body.password);
 
+        if(user === null) {
+            alert("아이디 또는 비밀번호가 틀렸습니다");
+
+            return res.redirect("/user/login");
+        };
+
+        session.user = user;
+
+        res.redirect("/index");
     };
 }

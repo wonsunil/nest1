@@ -4,8 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from "./Model/User";
 import { UserModule } from './Module/UserModule';
-import { UserController } from './Controller/userController';
-import { UserService } from './Service/UserService';
+import { SessionModule } from "nestjs-session";
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -16,7 +15,12 @@ import { UserService } from './Service/UserService';
     password: "1234",
     database: "test",
     entities: [User],
-  }), UserModule],
+  }),
+  UserModule,
+  SessionModule.forRoot({
+    session: { secret: "my-secret" }
+  })
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
